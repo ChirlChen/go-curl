@@ -12,7 +12,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"net"
 	"net/http"
 	"time"
 )
@@ -158,21 +157,7 @@ func (this *Request) Send(url string, method string) (*Response, error) {
 	// 初始化Response对象
 	response := NewResponse()
 	// 初始化http.Client对象
-	this.cli = &http.Client{
-		////////
-		Transport: &http.Transport{
-			Dial: func(netw, addr string) (net.Conn, error) {
-				conn, err := net.DialTimeout(netw, addr, time.Second*this.dialTimeout)
-				if err != nil {
-					return nil, err
-				}
-				conn.SetDeadline(time.Now().Add(time.Second * this.dialTimeout))
-				return conn, nil
-			},
-			ResponseHeaderTimeout: time.Second * this.responseTimeOut,
-		},
-		////////////
-	}
+	this.cli = &http.Client{}
 	// 加载用户自定义的post数据到http.Request
 	var payload io.Reader
 	if method == "POST" && this.PostData != nil {

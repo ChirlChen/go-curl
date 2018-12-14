@@ -16,6 +16,9 @@ func NewResponse() *Response {
 }
 
 func (this *Response) IsOk() bool {
+	if this == nil || this.Raw == nil {
+		return false
+	}
 	return this.Raw.StatusCode == 200
 }
 
