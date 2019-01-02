@@ -146,6 +146,12 @@ func (this *Request) SetResponseTimeOut(TimeOutSecond int) {
 
 // 发起请求
 func (this *Request) Send(url string, method string) (*Response, error) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("recover found：%s\n", r)
+			debug.PrintStack()
+		}
+	}()
 	// 检测请求url是否填了
 	if url == "" {
 		return nil, errors.New("Lack of request url")
