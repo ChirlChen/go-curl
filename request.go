@@ -11,11 +11,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
-	"time"
-	"fmt"
 	"runtime/debug"
+	"time"
 )
 
 // Request构造类
@@ -30,7 +30,7 @@ type Request struct {
 	Headers         map[string]string
 	Cookies         map[string]string
 	Queries         map[string]string
-	PostData        map[string]interface{}
+	PostData        interface{}
 }
 
 // 创建一个Request实例
@@ -101,7 +101,7 @@ func (this *Request) setQueries() error {
 }
 
 // 设置post请求的提交数据
-func (this *Request) SetPostData(postData map[string]interface{}) *Request {
+func (this *Request) SetPostData(postData interface{}) *Request {
 	this.PostData = postData
 	return this
 }
@@ -168,7 +168,7 @@ func (this *Request) Send(url string, method string) (*Response, error) {
 	this.cli = &http.Client{}
 	// 加载用户自定义的post数据到http.Request
 	var payload io.Reader
-	if method == "POST" && this.PostData != nil {
+	if (method == "POST" || method == "PUT") && this.PostData != nil {
 		if jData, err := json.Marshal(this.PostData); err != nil {
 			return nil, err
 		} else {
