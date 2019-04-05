@@ -102,6 +102,12 @@ func (this *Request) SetPostData(postData interface{}) *Request {
 	return this
 }
 
+// 设置post请求的提交数据
+func (this *Request) SetPostDataUrlEncode(postData map[string]interface{}) *Request {
+	this.PostDataQuery = postData
+	return this
+}
+
 // 发起get请求
 func (this *Request) Get() (*Response, error) {
 	return this.Send(this.Url, http.MethodGet)
