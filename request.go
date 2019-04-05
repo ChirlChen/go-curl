@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	url2 "net/url"
 	"runtime/debug"
 )
 
@@ -170,6 +171,7 @@ func (this *Request) Send(url string, method string) (*Response, error) {
 		payload = nil
 	}
 	if (method == "POST" || method == "PUT") && this.PostDataQuery != nil {
+		this.req.PostForm = url2.Values{}
 		for k, v := range this.PostDataQuery {
 			this.req.PostForm.Add(k, fmt.Sprint(v))
 		}
