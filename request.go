@@ -35,6 +35,7 @@ type Request struct {
 // 创建一个Request实例
 func NewRequest() *Request {
 	r := &Request{}
+	r.req = &http.Request{}
 	return r
 }
 
