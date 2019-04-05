@@ -9,7 +9,7 @@ go get github.com/mikemintang/go-curl
   
 ## 使用
 
-```
+```go
 package main
 
 import (
@@ -44,6 +44,14 @@ func main() {
         "isAdmin":   true,
     }
 
+//全kv对的form表单
+    postDataQuery := map[string]interface{}{
+        "name":      "mike",
+        "age":       "24",
+        "interests": "basketball",
+        "isAdmin":   "true",
+    }
+
     // 链式操作
     req := curl.NewRequest()
     resp, err := req.
@@ -52,6 +60,16 @@ func main() {
         SetCookies(cookies).
         SetQueries(queries).
         SetPostData(postData).
+        Post()
+
+    // 链式操作
+    req := curl.NewRequest()
+    resp, err := req.
+        SetUrl(url).
+        SetHeaders(headers).
+        SetCookies(cookies).
+        SetQueries(queries).
+        SetPostDataQuery(postData).
         Post()
 
     if err != nil {

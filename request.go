@@ -15,29 +15,25 @@ import (
 	"io"
 	"net/http"
 	"runtime/debug"
-	"time"
 )
 
 // Request构造类
 type Request struct {
-	cli             *http.Client
-	req             *http.Request
-	Raw             *http.Request
-	Method          string
-	Url             string
-	dialTimeout     time.Duration
-	responseTimeOut time.Duration
-	Headers         map[string]string
-	Cookies         map[string]string
-	Queries         map[string]string
-	PostData        interface{}
+	cli           *http.Client
+	req           *http.Request
+	Raw           *http.Request
+	Method        string
+	Url           string
+	Headers       map[string]string
+	Cookies       map[string]string
+	Queries       map[string]string
+	PostData      interface{}
+	PostDataQuery map[string]string
 }
 
 // 创建一个Request实例
 func NewRequest() *Request {
 	r := &Request{}
-	r.dialTimeout = 5
-	r.responseTimeOut = 5
 	return r
 }
 
@@ -136,16 +132,6 @@ func (this *Request) PATCH() (*Response, error) {
 	return this.Send(this.Url, http.MethodPatch)
 }
 
-//SetDialTimeOut
-func (this *Request) SetDialTimeOut(TimeOutSecond int) {
-	this.dialTimeout = time.Duration(TimeOutSecond)
-}
-
-//SetResponseTimeOut
-func (this *Request) SetResponseTimeOut(TimeOutSecond int) {
-	this.responseTimeOut = time.Duration(TimeOutSecond)
-}
-
 // 发起请求
 func (this *Request) Send(url string, method string) (*Response, error) {
 	defer func() {
@@ -173,6 +159,13 @@ func (this *Request) Send(url string, method string) (*Response, error) {
 			return nil, err
 		} else {
 			payload = bytes.NewReader(jData)
+		}
+	} else {
+		payload = nil
+	}
+	if (method == "POST" || method == "PUT") && this.PostDataQuery != nil {
+		for k, v := range this.PostDataQuery {
+			this.req.PostForm.Add(k, v)
 		}
 	} else {
 		payload = nil
