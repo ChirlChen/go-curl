@@ -28,7 +28,7 @@ type Request struct {
 	Cookies       map[string]string
 	Queries       map[string]string
 	PostData      interface{}
-	PostDataQuery map[string]string
+	PostDataQuery map[string]interface{}
 }
 
 // 创建一个Request实例
@@ -165,7 +165,7 @@ func (this *Request) Send(url string, method string) (*Response, error) {
 	}
 	if (method == "POST" || method == "PUT") && this.PostDataQuery != nil {
 		for k, v := range this.PostDataQuery {
-			this.req.PostForm.Add(k, v)
+			this.req.PostForm.Add(k, fmt.Sprint(v))
 		}
 	} else {
 		payload = nil
