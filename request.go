@@ -165,9 +165,9 @@ func (this *Request) Send(url string, method string) (*Response, error) {
 	if (method == "POST" || method == "PUT") && this.PostData != nil {
 		if jData, err := json.Marshal(this.PostData); err != nil {
 			return nil, err
-		} else {
-			payload = bytes.NewReader(jData)
-		}
+		} 
+		payload = bytes.NewReader(jData)
+		
 	} else {
 		payload = nil
 	}
