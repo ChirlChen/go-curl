@@ -163,12 +163,15 @@ func (this *Request) Send(url string, method string) (*Response, error) {
 	// 加载用户自定义的post数据到http.Request
 	var payload io.Reader
 	if (method == "POST" || method == "PUT") && this.PostData != nil {
-		if jData, err := json.Marshal(this.PostData); err != nil {
+		jData, err := json.Marshal(this.PostData)
+		if err != nil {
 			return nil, err
 		} 
+		fmt.Printf("xxxxxxxx: %v", this.PostData)
 		payload = bytes.NewReader(jData)
 		
 	} else {
+		fmt.Printf("xxxxxxxx: %v", this.PostData)
 		payload = nil
 	}
 	if (method == "POST" || method == "PUT") && this.PostDataQuery != nil {
